@@ -10,7 +10,7 @@ using UnityEngine.Networking;
 public class HttpRequest : MonoBehaviour
 {
 	private readonly string basePath = "https://localhost:44374/api/People";
-
+	[SerializeField] UserManager userManager;
 	private void LogMessage(string title, string message)
 	{
 #if UNITY_EDITOR
@@ -31,6 +31,7 @@ public class HttpRequest : MonoBehaviour
 			Debug.Log(res.Text);
 			Person[] arr = JsonConvert.DeserializeObject<Person[]>(res.Text);
 			Debug.Log(arr[0].Address);
+			userManager.Setter(arr[0].Id, arr[0].Name, arr[0].Address, arr[0].Password);
             
 
 		}).Catch(err => Debug.LogError(err.Message));
