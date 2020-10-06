@@ -1,15 +1,18 @@
 ﻿using Newtonsoft.Json;
-using Proyecto26;
 using System.Collections;
 using System.Collections.Generic;
-using Test_for_DB.Models;
+using System.Net.Http;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UIElements;
 
 public class HttpRequest : MonoBehaviour
 {
-	private readonly string basePath = "https://localhost:44374/api/People";
+	private readonly string basePath = "https://localhost:44386/api/People";
+	private readonly string basePath2 = "https://localhost:44386/api/Products";
+	private readonly string basePath3 = "https://localhost:44386/api/SignUp";
+	bool posting = false;
 	[SerializeField] UserManager userManager;
 	private void LogMessage(string title, string message)
 	{
@@ -21,126 +24,64 @@ public class HttpRequest : MonoBehaviour
 	}
     private void Start()
     {
-		Get();
+		StartCoroutine(GetPeople(basePath));
     }
 
-    public void Get()
+    
+	public IEnumerator GetPeople(string uri)
 	{
-		RestClient.Get(basePath).Then(res =>
+		using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
 		{
-			Debug.Log(res.Text);
-			Person[] arr = JsonConvert.DeserializeObject<Person[]>(res.Text);
-			Debug.Log(arr[0].Address);
-			userManager.Setter(arr[0].Id, arr[0].Name, arr[0].Address, arr[0].Password);
-            
+			// Request and wait for the desired page.
+			yield return webRequest.SendWebRequest();
+			
+			string[] pages = uri.Split('/');
+			int page = pages.Length - 1;
 
-		}).Catch(err => Debug.LogError(err.Message));
+			if (webRequest.isNetworkError || webRequest.isHttpError)
+				Debug.LogError(webRequest.error);
+			Person[] arr = JsonConvert.DeserializeObject<Person[]>(webRequest.downloadHandler.text);
+			Debug.Log(arr[0].Name);
+			userManager.Setter(arr[0]);
+		}	
 	}
-	/*
-	public void Post()
+	
+	
+
+
+	public void PostPerson()
+    {
+		if (!posting)
+			StartCoroutine(PostPerson2());
+		else
+			Debug.Log("Still Postion");
+    }
+
+	public IEnumerator PostPerson2()
 	{
+		posting = true;
+		
+		var person = userManager.GetPerson();
+		
+		var jsonPerson = JsonConvert.SerializeObject(person);
+		Debug.Log(jsonPerson.ToString());
 
-		// We can add default query string params for all requests
-		RestClient.DefaultRequestParams["param1"] = "My first param";
-		RestClient.DefaultRequestParams["param3"] = "My other param";
+		UnityWebRequest request = new UnityWebRequest(basePath3, "POST");
+		byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(jsonPerson);
+		request.uploadHandler = new UploadHandlerRaw(jsonToSend);
+		request.downloadHandler = new DownloadHandlerBuffer();
+		request.SetRequestHeader("content-Type", "application/json");
+		request.SetRequestHeader("Accept", "application/json");
+		yield return request.SendWebRequest();
+		if (request.isNetworkError || request.isHttpError) 
+			Debug.LogError(request.error);
+		Debug.Log(request.downloadHandler.text);
 
-		currentRequest = new RequestHelper
-		{
-			Uri = basePath + "/posts",
-			Params = new Dictionary<string, string> {
-				{ "param1", "value 1" },
-				{ "param2", "value 2" }
-			},
-			Body = new Post
-			{
-				title = "foo",
-				body = "bar",
-				userId = 1
-			},
-			EnableDebug = true
-		};
-		RestClient.Post<Post>(currentRequest)
-		.Then(res => {
+		posting = false;
 
-			// And later we can clear the default query string params for all requests
-			RestClient.ClearDefaultParams();
-
-			this.LogMessage("Success", JsonUtility.ToJson(res, true));
-		})
-		.Catch(err => this.LogMessage("Error", err.Message));
+		
 	}
 
-	public void Put()
-	{
 
-		currentRequest = new RequestHelper
-		{
-			Uri = basePath + "/posts/1",
-			Body = new Post
-			{
-				title = "foo",
-				body = "bar",
-				userId = 1
-			},
-			Retries = 5,
-			RetrySecondsDelay = 1,
-			RetryCallback = (err, retries) => {
-				Debug.Log(string.Format("Retry #{0} Status {1}\nError: {2}", retries, err.StatusCode, err));
-			}
-		};
-		RestClient.Put<Post>(currentRequest, (err, res, body) => {
-			if (err != null)
-			{
-				this.LogMessage("Error", err.Message);
-			}
-			else
-			{
-				this.LogMessage("Success", JsonUtility.ToJson(body, true));
-			}
-		});
-	}
-
-	public void Delete()
-	{
-
-		RestClient.Delete(basePath + "/posts/1", (err, res) => {
-			if (err != null)
-			{
-				this.LogMessage("Error", err.Message);
-			}
-			else
-			{
-				this.LogMessage("Success", "Status: " + res.StatusCode.ToString());
-			}
-		});
-	}
-
-	public void AbortRequest()
-	{
-		if (currentRequest != null)
-		{
-			currentRequest.Abort();
-			currentRequest = null;
-		}
-	}
-
-	public void DownloadFile()
-	{
-
-		var fileUrl = "https://raw.githubusercontent.com/IonDen/ion.sound/master/sounds/bell_ring.ogg";
-		var fileType = AudioType.OGGVORBIS;
-
-		RestClient.Get(new RequestHelper
-		{
-			Uri = fileUrl,
-			DownloadHandler = new DownloadHandlerAudioClip(fileUrl, fileType)
-		}).Then(res => {
-			AudioSource audio = GetComponent<AudioSource>();
-			audio.clip = ((DownloadHandlerAudioClip)res.Request.downloadHandler).audioClip;
-			audio.Play();
-		}).Catch(err => {
-			this.LogMessage("Error", err.Message);
-		});
-	}
-	*/
+	
 }
