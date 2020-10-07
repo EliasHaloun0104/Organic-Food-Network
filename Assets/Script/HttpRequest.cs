@@ -11,7 +11,7 @@ public class HttpRequest : MonoBehaviour
 {
 	private readonly string basePath = "https://localhost:44386/api/People";
 	private readonly string basePath2 = "https://localhost:44386/api/Products";
-	private readonly string basePath3 = "https://localhost:44386/api/SignUp";
+	
 	bool posting = false;
 	[SerializeField] UserManager userManager;
 	private void LogMessage(string title, string message)
@@ -49,38 +49,7 @@ public class HttpRequest : MonoBehaviour
 	
 
 
-	public void PostPerson()
-    {
-		if (!posting)
-			StartCoroutine(PostPerson2());
-		else
-			Debug.Log("Still Postion");
-    }
-
-	public IEnumerator PostPerson2()
-	{
-		posting = true;
-		
-		var person = userManager.GetPerson();
-		
-		var jsonPerson = JsonConvert.SerializeObject(person);
-		Debug.Log(jsonPerson.ToString());
-
-		UnityWebRequest request = new UnityWebRequest(basePath3, "POST");
-		byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(jsonPerson);
-		request.uploadHandler = new UploadHandlerRaw(jsonToSend);
-		request.downloadHandler = new DownloadHandlerBuffer();
-		request.SetRequestHeader("content-Type", "application/json");
-		request.SetRequestHeader("Accept", "application/json");
-		yield return request.SendWebRequest();
-		if (request.isNetworkError || request.isHttpError) 
-			Debug.LogError(request.error);
-		Debug.Log(request.downloadHandler.text);
-
-		posting = false;
-
-		
-	}
+	
 
 
 	
