@@ -9,11 +9,10 @@ using UnityEngine.UIElements;
 
 public class HttpRequest : MonoBehaviour
 {
-	private readonly string basePath = "https://localhost:44386/api/People";
-	private readonly string basePath2 = "https://localhost:44386/api/Products";
 	
-	bool posting = false;
-	[SerializeField] UserManager userManager;
+	public static readonly string API_Base = "https://localhost:44386/api/";
+
+	
 	private void LogMessage(string title, string message)
 	{
 #if UNITY_EDITOR
@@ -22,35 +21,54 @@ public class HttpRequest : MonoBehaviour
 		Debug.Log(message);
 #endif
 	}
-    private void Start()
-    {
-		StartCoroutine(GetPeople(basePath));
-    }
-
     
-	public IEnumerator GetPeople(string uri)
-	{
-		using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
-		{
-			// Request and wait for the desired page.
-			yield return webRequest.SendWebRequest();
-			
-			string[] pages = uri.Split('/');
-			int page = pages.Length - 1;
-
-			if (webRequest.isNetworkError || webRequest.isHttpError)
-				Debug.LogError(webRequest.error);
-			Person[] arr = JsonConvert.DeserializeObject<Person[]>(webRequest.downloadHandler.text);
-			Debug.Log(arr[0].Name);
-			userManager.Setter(arr[0]);
-		}	
+	//Used for login & SignUp
+	
+	public static UnityWebRequest Post(string json, string addUrl)
+    {
+		UnityWebRequest request = new UnityWebRequest(API_Base + addUrl, "POST");
+		byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json);
+		request.uploadHandler = new UploadHandlerRaw(jsonToSend);
+		request.downloadHandler = new DownloadHandlerBuffer();
+		request.SetRequestHeader("content-Type", "application/json");
+		request.SetRequestHeader("Accept", "application/json");
+		return request;
 	}
 	
-	
+	public static UnityWebRequest Put(int id, string json, string addUrl)
+    {
+		UnityWebRequest request = new UnityWebRequest(API_Base + addUrl  + "/" + id, "PUT");
+		byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json);
+		request.uploadHandler = new UploadHandlerRaw(jsonToSend);
+		request.downloadHandler = new DownloadHandlerBuffer();
+		request.SetRequestHeader("content-Type", "application/json");
+		request.SetRequestHeader("Accept", "application/json");
+		return request;
+	}
+
+    
+	public static UnityWebRequest Get(string addUrl)
+	{
+		
+		UnityWebRequest request = new UnityWebRequest(API_Base + addUrl, "GET");
+		request.downloadHandler = new DownloadHandlerBuffer();
+		request.SetRequestHeader("content-Type", "application/json");
+		request.SetRequestHeader("Accept", "application/json");
+		return request;			
+		
+	}
+
+	public static bool Error(UnityWebRequest request)
+	{
+		return request.isNetworkError || request.isHttpError;
+
+	}
 
 
-	
 
 
-	
+
+
+
+
 }
