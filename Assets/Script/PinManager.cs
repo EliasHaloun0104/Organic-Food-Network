@@ -1,28 +1,69 @@
 ﻿using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class PinManager : MonoBehaviour
 {
+    [SerializeField] private TextMeshPro textMeshPro;
     private Person person;
     private ArrayList products;
     private Camera originCamera;
     private bool dragging = false;
     private bool putting = false;
     private float distance;
+    bool posting;
 
     // Start is called before the first frame update
     void Start()
     {
         originCamera = FindObjectOfType<Camera>();
+        posting = false;
     }
 
     private void OnMouseDown()
     {
         distance = Vector3.Distance(transform.position, originCamera.transform.position);
-        dragging = true;
+        if (!posting) StartCoroutine(GetProducts());
+        //dragging = true;
+        
     }
+
+
+    public IEnumerator GetProducts()
+    {
+        posting = true;
+        var request = HttpRequest.Get("ProductsByUser" + "/" + person.Id);
+        yield return request.SendWebRequest();
+
+        if (HttpRequest.Error(request))
+            Debug.LogError(request.error);
+        else
+        {
+            Product[] arr = JsonConvert.DeserializeObject<Product[]>(request.downloadHandler.text);
+            string productDetails = "";
+            if (arr.Length < 1)
+            {
+                textMeshPro.text = person.Name + ", " + person.Address + "\nThis Seller don't have any product now";
+            }
+            else
+            {
+                textMeshPro.text = person.Name + ", " + person.Address + "\n";
+                foreach (var item in arr)
+                {
+                    productDetails += item.Name + ", " + item.Quantity + item.Unit + "\n";                   
+
+                }
+                textMeshPro.text += "\n" + productDetails;
+            }
+            
+        }
+        posting = false;
+    }
+        
+
+    
 
     private void OnMouseUp()
     {
@@ -68,5 +109,6 @@ public class PinManager : MonoBehaviour
     {
         this.person = person;
         transform.position = new Vector3(person.XCoordinate, person.YCoordinate);
+        textMeshPro.text = person.Name + ", " + person.Address;
     }
 }

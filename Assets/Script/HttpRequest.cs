@@ -45,6 +45,15 @@ public class HttpRequest : MonoBehaviour
 		request.SetRequestHeader("Accept", "application/json");
 		return request;
 	}
+	
+	public static UnityWebRequest Delete(int id, string addUrl)
+    {
+
+		return UnityWebRequest.Delete(API_Base + addUrl + "/" + id);
+		
+	}
+
+
 
     
 	public static UnityWebRequest Get(string addUrl)

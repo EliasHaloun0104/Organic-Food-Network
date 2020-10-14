@@ -7,9 +7,11 @@ using UnityEngine.Networking;
 public class MapManager : MonoBehaviour
 {
     [SerializeField] private PinManager pin;
+    [SerializeField] private Person person;
     // Start is called before the first frame update
     IEnumerator Start()
     {
+        person = Utils.LoadPrefs();
 		var request = HttpRequest.Get("People");
 		yield return request.SendWebRequest();
 		
@@ -22,6 +24,8 @@ public class MapManager : MonoBehaviour
             {
                 PinManager clone = Instantiate(pin);
                 clone.SetPerson(item);
+                
+                    
             }
         }		
 	}
