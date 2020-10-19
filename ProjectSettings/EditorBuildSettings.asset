@@ -12,9 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/02 - Portal.unity
     guid: 14db451b94959f94b9ca46b92df74159
   - enabled: 1
-    path: Assets/Scenes/03A - Buy.unity
+    path: Assets/Scenes/03 - Buy.unity
     guid: ae0bea201552bd047886b71ccb03c163
   - enabled: 1
-    path: Assets/Scenes/03C - Product.unity
+    path: Assets/Scenes/04 - Product.unity
     guid: b94cb47106e17da42bdb97852739ac12
   m_configObjects: {}

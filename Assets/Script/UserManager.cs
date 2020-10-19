@@ -162,6 +162,7 @@ public class UserManager : MonoBehaviour
         {
             //Save user info in pref
             var data = request.downloadHandler.text;
+            Debug.Log(data);
             DeserializePerson(data);
             person.Password = password.text; //Unhash to save in pref
             Utils.SavePrefs(person);

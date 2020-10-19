@@ -10,7 +10,6 @@ public class PinManager : MonoBehaviour
 {
     [SerializeField] private TextMeshPro textMeshPro;
     private Person person;
-    private ArrayList products;
     private Camera originCamera;
     private bool dragging = false;
     private bool putting = false;
@@ -26,8 +25,20 @@ public class PinManager : MonoBehaviour
 
     private void OnMouseDown()
     {
-        distance = Vector3.Distance(transform.position, originCamera.transform.position);
-        if (!posting) StartCoroutine(GetProducts());
+        var userRole = Utils.LoadPrefs().Role;
+        if (userRole == "Admin")
+        {
+            distance = Vector3.Distance(transform.position, originCamera.transform.position);
+            dragging = true;
+        }
+        else
+        {
+            if (!posting) 
+                StartCoroutine(GetProducts());
+            
+        }
+        
+        
         //dragging = true;
         
     }
@@ -76,11 +87,22 @@ public class PinManager : MonoBehaviour
 
     private void OnMouseUp()
     {
-        person.XCoordinate = transform.position.x;
-        person.YCoordinate = transform.position.y;
-        if (!putting)
-            StartCoroutine(UpdatePerson());
-        dragging = false;
+        var userRole = Utils.LoadPrefs().Role;
+        if(userRole == "Admin")
+        {
+            person.XCoordinate = transform.position.x;
+            person.YCoordinate = transform.position.y;
+            dragging = false;
+        }
+        else
+        {
+            if (!putting)
+                StartCoroutine(UpdatePerson());
+        }
+
+        
+        
+        
     }
 
     private IEnumerator UpdatePerson()
