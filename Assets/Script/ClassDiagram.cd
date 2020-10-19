@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="HttpRequest">
+    <Position X="0.5" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAAAAQBAAAAAAAAACAEAAAAABAAAAAAAAAg=</HashCode>
+      <FileName>Assets\Script\HttpRequest.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapManager">
+    <Position X="3.25" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAACAAAAIAAAAAAAAAAAAAAAAAAAAAAACAAAA=</HashCode>
+      <FileName>Assets\Script\MapManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PinchAndZoom">
+    <Position X="6" Y="7" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAABAIAACAACACAAAAgAgAAAAAAAACAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Script\PinchAndZoom.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PinManager">
+    <Position X="0.5" Y="6" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AASAAAAAACAIABAIAAAAAAAAAEIACAAAYABABACCAAA=</HashCode>
+      <FileName>Assets\Script\PinManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProductManager">
+    <Position X="3.25" Y="2.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQCSAAACJgAACAAAABAAgAAAAACAQAQAgABAAAAKA=</HashCode>
+      <FileName>Assets\Script\ProductManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UserManager">
+    <Position X="6" Y="0.5" Width="2.75" />
+    <NestedTypes>
+      <Enum Name="UserManager.UserManagerCase" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Script\UserManager.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAGBADAIAIAEgCEAAIEIACAAAAAAQAkGEAiA=</HashCode>
+      <FileName>Assets\Script\UserManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Utils">
+    <Position X="0.5" Y="3.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAgQAQAEAAAAIAAAAAIAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Script\Utils.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
