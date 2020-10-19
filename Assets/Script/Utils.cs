@@ -4,9 +4,27 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class Utils
+
+public class Utils: MonoBehaviour
 {    
+    public void BuyScene()
+    {
+        SceneManager.LoadScene(2);
+    }
+    
+    public void PortalScene2()
+    {
+        SceneManager.LoadScene(1);
+    }
+    
+    public void ProductScene()
+    {
+        SceneManager.LoadScene(3);
+    }
+
+
     public static string HashPassword(string inputString)
     {
         byte[] hash;
@@ -36,4 +54,13 @@ public class Utils
     {
         return PlayerPrefs.HasKey("UserInfo");
     }
+
+
+    public static void PortalScene()
+    {
+        SceneManager.LoadScene(1);
+    }
+
+
+    
 }

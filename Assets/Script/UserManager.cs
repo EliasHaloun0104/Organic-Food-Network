@@ -5,7 +5,6 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UserManager : MonoBehaviour
@@ -22,6 +21,7 @@ public class UserManager : MonoBehaviour
     [SerializeField] private TMP_InputField password;
     [SerializeField] private TextMeshProUGUI message;    
     [SerializeField] private TextMeshProUGUI actionButton;
+    [SerializeField] private TextMeshProUGUI switchButton;
     [SerializeField] private UserManagerCase userManagerCase;
     [SerializeField] private CanvasGroup canvasID;
     [SerializeField] private CanvasGroup canvasAddress;
@@ -29,6 +29,13 @@ public class UserManager : MonoBehaviour
 
 
     private void Start()
+    {
+
+        LoadScene();
+    }
+
+
+    private void LoadScene()
     {
         person = new Person();
         switch (userManagerCase)
@@ -38,11 +45,13 @@ public class UserManager : MonoBehaviour
                 actionButton.text = "Sign Up";
                 canvasID.alpha = 0f;
                 canvasID.blocksRaycasts = false;
+                canvasAddress.alpha = 1f;
+                canvasAddress.blocksRaycasts = true;
 
                 break;
             case UserManagerCase.LOGIN:
                 subtitle.text = "Welcome";
-                actionButton.text = "Login"; 
+                actionButton.text = "Login";
                 canvasID.alpha = 0f;
                 canvasID.blocksRaycasts = false;
                 canvasAddress.alpha = 0f;
@@ -52,14 +61,14 @@ public class UserManager : MonoBehaviour
                 break;
             case UserManagerCase.UPDATEINFO:
                 subtitle.text = "Update";
+                actionButton.text = "Update";
+                canvasID.alpha = 1f;
+                canvasID.blocksRaycasts = true;
+                canvasAddress.alpha = 1f;
+                canvasAddress.blocksRaycasts = true;
                 LoadPersonFromPref();
                 InterfacePerson();
                 break;
-        }
-        //Login
-        if (Utils.IsDataExist())
-        {
-            //SceneManager.LoadScene(3);
         }
     }
 
@@ -83,6 +92,27 @@ public class UserManager : MonoBehaviour
 
         else 
             message.text = "Waiting respond from server";
+    }
+
+
+    public void SwitchButton()
+    {
+        switch (userManagerCase)
+        {
+            case UserManagerCase.LOGIN:
+                userManagerCase = UserManagerCase.SIGNUP;
+                switchButton.text = "to update info click here";
+                break;
+            case UserManagerCase.SIGNUP:
+                userManagerCase = UserManagerCase.UPDATEINFO;
+                switchButton.text = "to login click here";                
+                break;
+            case UserManagerCase.UPDATEINFO:
+                userManagerCase = UserManagerCase.LOGIN;
+                switchButton.text = "to SignUp click here";
+                break;
+        }
+        LoadScene();
     }
 
     public IEnumerator SignUp()
@@ -110,9 +140,10 @@ public class UserManager : MonoBehaviour
                 person.Password = password.text; //Unhash to save in pref
                 
                 //Save user info in pref                
-                Utils.SavePrefs(person);                 
+                Utils.SavePrefs(person);
                 //Move to next scene
-                SceneManager.LoadScene(3);
+                yield return new WaitForSeconds(1);
+                Utils.PortalScene();
             }
         }
         posting = false;
@@ -135,7 +166,8 @@ public class UserManager : MonoBehaviour
             person.Password = password.text; //Unhash to save in pref
             Utils.SavePrefs(person);
             //Move to next scene
-            SceneManager.LoadScene(3);
+            yield return new WaitForSeconds(1);
+            Utils.PortalScene();
         }
 
         posting = false;
@@ -158,8 +190,9 @@ public class UserManager : MonoBehaviour
             person.Password = password.text; //Unhash to save in pref
             Utils.SavePrefs(person);
             message.text = "your info updated successfully";
+            yield return new WaitForSeconds(1);
             //Move to next scene
-            //SceneManager.LoadScene(3);
+            Utils.PortalScene();
         }
 
         posting = false;

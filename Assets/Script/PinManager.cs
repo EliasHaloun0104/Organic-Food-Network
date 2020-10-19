@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -41,6 +43,13 @@ public class PinManager : MonoBehaviour
             Debug.LogError(request.error);
         else
         {
+            /*
+            var headers = request.GetResponseHeaders();
+            var lines = headers.Select(kvp => kvp.Key + ": " + kvp.Value.ToString());
+            Debug.Log(string.Join(Environment.NewLine, lines));
+            */
+            
+            
             Product[] arr = JsonConvert.DeserializeObject<Product[]>(request.downloadHandler.text);
             string productDetails = "";
             if (arr.Length < 1)
