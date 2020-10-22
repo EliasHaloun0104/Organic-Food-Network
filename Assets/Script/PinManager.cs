@@ -142,4 +142,7 @@ public class PinManager : MonoBehaviour
         transform.position = new Vector3(person.XCoordinate, person.YCoordinate);
         textMeshPro.text = person.Name + ", " + person.Address;
     }
+
+
+    
 }

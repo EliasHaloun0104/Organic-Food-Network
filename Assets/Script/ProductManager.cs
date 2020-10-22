@@ -195,4 +195,9 @@ public class ProductManager : MonoBehaviour
             message.text = "Done!";
         posting = false;
     }
+
+    public void BackToPortal()
+    {
+        Utils.PortalScene();
+    }
 }

@@ -1,17 +1,38 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using UnityEngine.UI;
 
 public class Utils: MonoBehaviour
-{    
+{
+    [SerializeField] Button adminButton;
+    private void Start()
+    {
+        if (LoadPrefs().Role != "Admin")
+        {
+            try
+            {
+                adminButton.enabled = false;
+            }catch(Exception)
+            {
+
+            }
+            
+        }
+    }
     public void BuyScene()
     {
         SceneManager.LoadScene(2);
+    }
+
+    public void AdminScene()
+    {
+        SceneManager.LoadScene(4);
     }
     
     public void PortalScene2()
@@ -61,6 +82,8 @@ public class Utils: MonoBehaviour
         SceneManager.LoadScene(1);
     }
 
-
     
+
+
+
 }

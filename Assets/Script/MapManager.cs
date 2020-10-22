@@ -35,4 +35,9 @@ public class MapManager : MonoBehaviour
     {
         
     }
+
+    public void BackToPortal()
+    {
+        Utils.PortalScene();
+    }
 }

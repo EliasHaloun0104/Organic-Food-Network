@@ -95,4 +95,9 @@ public class AdminFeature : MonoBehaviour
     {
         
     }
+
+    public void BackToPortal()
+    {
+        Utils.PortalScene();
+    }
 }
